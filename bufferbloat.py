@@ -147,27 +147,28 @@ def configure_routes(net):
     h3 = net.getNodeByName('h3')
 
     # my code start
-    # h3, h2, to h1 routing
+    
+    # route pkts intended for h1 at r1 to h1
     r1.cmd("ip route add 10.0.1.0/24 via 10.0.1.3")
+    
+    # route pkts intended for h1 at r3 to r1
     r3.cmd("ip route add 10.0.1.0/24 via 10.0.5.1")
 
-    # h1 to h3 routing
+    # route pkts intended for h3 at r1 to r3
     r1.cmd("ip route add 10.0.3.0/24 via 10.0.5.2")
 
-    # h1 to h2 routing
+    # route pkts intended for h2 at h1 to r2
     h1.cmd("ip route add 10.0.2.0/24 via 10.0.1.6")
 
-
-    # the start of the part you should edit
+    # default go through r1, all pkts for h3 from h1 go to r1
+    h1.cmd("ip route add default via 10.0.1.3")
+    
     r2.cmd("ip route add 10.0.2.0/24 via 10.0.2.3")
     r2.cmd("ip route add 10.0.3.0/24 via 10.0.4.4")
     r2.cmd("ip route add 10.0.1.0/24 via 10.0.1.6")
 
     r3.cmd("ip route add 10.0.3.0/24 via 10.0.3.3")
     r3.cmd("ip route add default via 10.0.4.3 dev r3-eth2")
-
-    # default go through r1
-    h1.cmd("ip route add default via 10.0.1.3")
 
     h2.cmd("ip route add default via 10.0.2.3")
     h3.cmd("ip route add default via 10.0.3.3")
